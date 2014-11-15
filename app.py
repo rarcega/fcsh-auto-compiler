@@ -115,9 +115,6 @@ def load_config():
     for property, value in props.iteritems():
       contents = contents.replace('{{' + property + '}}', value) 
       
-    print contents
-    
-    sys.exit(0)
     return yaml.load(contents)
     
 def main(argv):
