@@ -108,11 +108,14 @@ def run(cmd, port, start_daemon_if_missing=True):
             os.system(cmd)
             return
         LOG.info('No daemon process, creating one...')
-        os.system('start /B "" python %s --start-daemon --port %i --command "%s"' % (sys.argv[0], port, cmd))
+        if os.name == 'nt':
+          os.system('start /B "" python %s --start-daemon --port %i --command "%s"' % (sys.argv[0], port, cmd))
+        else:
+          os.system('python %s --start-daemon --port %s &' % (sys.argv[0], str(port)) )
         time.sleep(2)
         return run(cmd, port, start_daemon_if_missing=False)
     s.send(cmd)
-    result = ""
+    result = ''
     while True:
         data = s.recv(10240)
         sys.stdout.write(data)
