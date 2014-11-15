@@ -111,7 +111,7 @@ def run(cmd, port, start_daemon_if_missing=True):
         if os.name == 'nt':
           os.system('start /B "" python %s --start-daemon --port %i --command "%s"' % (sys.argv[0], port, cmd))
         else:
-          os.system('python %s --start-daemon --port %s &' % (sys.argv[0], str(port)) )
+          os.system('python %s --start-daemon --port %i &' % (sys.argv[0], port))
         time.sleep(2)
         return run(cmd, port, start_daemon_if_missing=False)
     s.send(cmd)
