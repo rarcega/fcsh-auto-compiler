@@ -43,15 +43,15 @@ class ChangeHandler(FileSystemEventHandler):
         
     if diff.files_modified:
       LOG.info('Modified:')
-      [ LOG.info("\t" + str(file)) for file in diff.files_modified ]
+      [ LOG.info('\t' + str(file)) for file in diff.files_modified ]
         
     if diff.files_moved:
       LOG.info('Moved:')
-      [ LOG.info("\t" + str(file)) for file in diff.files_moved ]
+      [ LOG.info('\t' + str(file)) for file in diff.files_moved ]
       
     if diff.files_deleted:
       LOG.info('Deleted:')
-      [ LOG.info("\t" + str(file)) for file in diff.files_deleted ]
+      [ LOG.info('\t' + str(file)) for file in diff.files_deleted ]
  
  
 class BuildWorker(threading.Thread):
