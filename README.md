@@ -46,4 +46,4 @@ mklink /J "C:\flex\4.6.0" "C:\Program Files\Adobe\Adobe Flash Builder 4.6\sdks\4
 Resources
 ---------
 - [fcsh](http://help.adobe.com/en_US/flex/using/WS2db454920e96a9e51e63e3d11c0bf67670-7fcd.html)
-- [flexcompile](https://code.google.com/p/flexcompile))
+- [flexcompile](https://code.google.com/p/flexcompile)
