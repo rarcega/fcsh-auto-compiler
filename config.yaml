@@ -1,0 +1,64 @@
+---
+projects:
+      # the name of the project
+    - name:             foo
+    
+      # whether to enable automatic compilation
+      enabled:          yes 
+      
+      # source paths to watch for changes
+      src_paths:        
+                        - { path: 'src', recursive: yes }
+
+      # the compile command(s) to invoke when changes are detected
+      compile_command:  'mxmlc test.mxml test.swf'
+
+      
+    - name:             project_name
+      enabled:          no
+      
+      src_paths:        
+                        - { path: '{{base_dir}}/project/src', recursive: yes }
+                        - { path: '{{base_dir}}/project/locale', recursive: yes }
+
+      compile_command:  >
+            mxmlc
+            -source-path+={{base_dir}}/project/src
+            -define=NAMES::version,'1.0.0'
+            -external-library-path+={flex_home}
+            -library-path+={{base_dir}}/project/libs
+            -incremental=true
+            -debug=true
+            -static-link-runtime-shared-libraries=false
+            -actionscript-file-encoding=UTF-8
+            -output {{tomcat_home}}/webapps/{{app_dir}}/foo.swf
+            -- {{base_dir}}/project/src/Foo.mxml
+
+    - name:             css
+      enabled:          no
+
+      src_paths:        
+                        - { path: '{{base_dir}}/project/assets/css', recursive: no }
+                        
+      compile_command:  [
+                            "mxmlc \
+                            -source-path+={{base_dir}}/project/src \
+                            -external-library-path+={flex_home} \
+                            -library-path+={{base_dir}}/project/libs \
+                            -incremental=false \
+                            -static-rsls=false \
+                            -actionscript-file-encoding=UTF-8 \
+                            -output {{tomcat_home}}/webapps/{{app_dir}}/base.swf \
+                            -- {{base_dir}}/project/src/base.css",
+                            
+                            "mxmlc \
+                            -source-path+={{base_dir}}/project/src \
+                            -external-library-path+={flex_home} \
+                            -library-path+={{base_dir}}/project/libs \
+                            -incremental=false \
+                            -static-rsls=false \
+                            -actionscript-file-encoding=UTF-8 \
+                            -output {{tomcat_home}}/webapps/{{app_dir}}/assets/theme.swf \
+                            -- {{base_dir}}/project/src/theme.css"
+                        ]
+...                        
