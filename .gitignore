@@ -1,5 +1,8 @@
 venv
 *.pyc
+*.mxml
+*.swf
+test/
 
 # Build and Release Folders
 bin/

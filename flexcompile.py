@@ -28,7 +28,7 @@ def slurp_chunk(proc, conn):
             break
         conn.send(l)
         chunk += l
-        if chunk.endswith("\n(fcsh)"):
+        if chunk.endswith('\n(fcsh)'):
             return chunk
 
 def daemon(port):
@@ -55,10 +55,10 @@ def daemon(port):
               if proc: proc.kill()  
               break
             needkill = False
-            for line in data.split("&&"):
+            for line in data.split('&&'):
                 line = line.strip()
-                LOG.debug("< %s" % line)
-                if line.startswith("cd "):
+                LOG.debug('< %s' % line)
+                if line.startswith('cd '):
                     d = line[3:].strip()
                     if d != curdir:
                         curdir = d
@@ -66,21 +66,21 @@ def daemon(port):
                 else:
                     cmd = line
                     if cmd in prevcmds:
-                        cmd = "compile %d" % prevcmds[cmd]
+                        cmd = 'compile %d' % prevcmds[cmd]
             if not proc or needkill:
                 if proc:
                     proc.stdin.close()
                     proc.wait()
                 os.chdir(curdir)
-                LOG.debug("Starting fcsh process...")
+                LOG.debug('Starting fcsh process...')
                 proc = subprocess.Popen(['fcsh'],
                                         stdin=subprocess.PIPE,
                                         stdout=subprocess.PIPE,
                                         stderr=subprocess.STDOUT)
                 chunk = slurp_chunk(proc, conn)
 
-            LOG.debug("Writing %s" % cmd)
-            proc.stdin.write(cmd + "\n")
+            LOG.debug('Writing %s' % cmd)
+            proc.stdin.write(cmd + '\n')
             proc.stdin.flush()
             chunk = slurp_chunk(proc, conn)
             if cmd not in prevcmds:
@@ -88,26 +88,26 @@ def daemon(port):
                                   chunk)
                 if match:
                     prevcmds[cmd] = int(match.group(1))
-            conn.send("\nDone\n")
+            conn.send('\nDone\n')
             conn.close()
             time.sleep(1)
-            LOG.debug("Closed connection")
+            LOG.debug('Closed connection')
     except:
       traceback.print_exc()
       if s: s.close()
       if proc: proc.kill()  
 
 def run(cmd, port, start_daemon_if_missing=True):
-    cmd = "cd %s && %s" % (os.getcwd(), cmd)
+    cmd = 'cd %s && %s' % (os.getcwd(), cmd)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     try:
         s.connect((HOST, port))
     except socket.error:
         if not start_daemon_if_missing:
-            LOG.info("No daemon process; running directly.")
+            LOG.info('No daemon process; running directly.')
             os.system(cmd)
             return
-        LOG.info("No daemon process, creating one...")
+        LOG.info('No daemon process, creating one...')
         os.system('start /B "" python %s --start-daemon --port %i --command "%s"' % (sys.argv[0], port, cmd))
         time.sleep(2)
         return run(cmd, port, start_daemon_if_missing=False)
@@ -118,15 +118,15 @@ def run(cmd, port, start_daemon_if_missing=True):
         sys.stdout.write(data)
         sys.stdout.flush()
         result += data
-        if result.endswith("\nDone\n"):
+        if result.endswith('\nDone\n'):
             break
             
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument("-c", "--command", help="mxmlc compilation command")
-  parser.add_argument("-d", "--start-daemon", help="create fcsh daemon", action="store_true")
-  parser.add_argument("-p", "--port", help="socket port", type=int, default=53000)
-  parser.add_argument("-k", "--kill-daemon", help="kill the daemon process", action="store_true")
+  parser.add_argument('-c', '--command', help='mxmlc compilation command')
+  parser.add_argument('-d', '--start-daemon', help='create fcsh daemon', action='store_true')
+  parser.add_argument('-p', '--port', help='socket port', type=int, default=53000)
+  parser.add_argument('-k', '--kill-daemon', help='kill the daemon process', action='store_true')
   args = parser.parse_args()
   
   if args.kill_daemon:

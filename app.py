@@ -64,11 +64,17 @@ class BuildWorker(threading.Thread):
     self.observers = []
     
     for src_path in self.project['src_paths']:
-      self.observers.append(Observer())
-      self.observers[-1].schedule(ChangeHandler(self, src_path['path']), path=src_path['path'], recursive=src_path['recursive'])
-      self.observers[-1].start()
+      if os.path.exists( src_path['path'] ):
+        self.observers.append(Observer())
+        self.observers[-1].schedule(ChangeHandler(self, src_path['path']), path=src_path['path'], recursive=src_path['recursive'])
+        self.observers[-1].start()
+      else:
+        LOG.warn('Source path "%s" could not be found, skipping monitoring.' % src_path['path'])
       
-    LOG.info('Waiting for changes in %s...', self.project['name'])
+    if len(self.observers) > 0:
+      LOG.info('Waiting for changes in %s...', self.project['name'])
+    else:
+      LOG.error("No valid source paths exist for %s. Can't build project." % self.project['name'])
             
   def run(self):
     while not self.kill_received:
@@ -146,8 +152,8 @@ def main(argv):
       
 if __name__ == '__main__':
   parser = argparse.ArgumentParser()
-  parser.add_argument("-p", "--properties", default="config.properties", help="config property file for variable interpolation")
-  parser.add_argument("-c", "--config", default="config.yaml", help="application config file")
+  parser.add_argument('-p', '--properties', default='config.properties', help='config property file for variable interpolation')
+  parser.add_argument('-c', '--config', default='config.yaml', help='application config file')
   args = parser.parse_args()
     
   main(args)  
