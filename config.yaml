@@ -11,7 +11,7 @@ projects:
                         - { path: 'src', recursive: yes }
 
       # the compile command(s) to invoke when changes are detected
-      compile_command:  'mxmlc test.mxml test.swf'
+      compile_command:  'mxmlc test.mxml'
 
       
     - name:             project_name
