@@ -88,6 +88,7 @@ class BuildWorker(threading.Thread):
   
   def compile(self):
     LOG.info('Building %s... (socket=:%s)', self.project['name'], self.port)
+    start_time = time.time()
     
     if isinstance(self.project['compile_command'], basestring):
         self.compile_proc = subprocess.Popen(shlex.split('python flexcompile.py -p ' + self.port + ' -c "' + self.project['compile_command'] + '"'))
@@ -96,6 +97,9 @@ class BuildWorker(threading.Thread):
         for cmd in self.project['compile_command']:
             self.compile_proc = subprocess.Popen(shlex.split('python flexcompile.py -p ' + self.port + ' -c "' + cmd + '"'))
             self.compile_proc.communicate()
+
+    duration = time.time() - start_time
+    LOG.info('Finished %s in %s seconds.', self.project['name'], (round(duration, 2)))
     LOG.info('Waiting for changes in %s...', self.project['name'])
     
   def stop_compile(self):
